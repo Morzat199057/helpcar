@@ -10,10 +10,14 @@
     <meta content="email=no" name="format-detection">
     <meta charset="UTF-8">
     <title>位置</title>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/fontSize-response.js"></script>
     <style>
-        body{
-            margin:0; padding:0;
+        body {
+            margin: 0;
+            padding: 0;
         }
+
         #btnsend {
             font-size: 0.4rem;
             color: #FFFFFF;
@@ -30,40 +34,30 @@
         }
     </style>
 </head>
-<iframe id="mapPage" width="100%" height="600" frameborder=0
-        src="http://apis.map.qq.com/tools/locpicker?search=1&type=1&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp">
+<iframe id="mapPage" width="100%" frameborder=0
+        src="http://apis.map.qq.com/tools/locpicker?search=1&type=1&total=5&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&referer=myapp">
 </iframe>
 <div id="btnsend">一键叫车</div>
 </div>
 <script type="text/javascript">
-    window.addEventListener('message', function(event) {
+    window.addEventListener('message', function (event) {
+        console.log(event);
         // 接收位置信息，用户选择确认位置点后选点组件会触发该事件，回传用户的位置信息
         var loc = event.data;
         if (loc && loc.module == 'locationPicker') {//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
             console.log('location', loc);
         }
     }, false);
-    (function (doc_01, win_01) {
-        var docEl_01 = doc_01.documentElement;
-        var resizeEvt_01 = 'orientationchange' in window ? 'orientationchange' : 'resize';
-        var recalc_01 = function () {
-            var clientWidth_01 = docEl_01.clientWidth;
-            var clientheight_01 = docEl_01.clientHeight;
-            if (!clientWidth_01) return;
-            if(clientWidth_01<721)
-            {
-                docEl_01.style.fontSize = (clientWidth_01 /750*100).toFixed(1)+'px';
-            }
-            else
-            {
-                docEl_01.style.fontSize = 100+'px';
-
-            }
-        };
-        recalc_01();
-        if (!doc_01.addEventListener) return;
-        win_01.addEventListener(resizeEvt_01, recalc_01, false);
-    })(document, window);
+    window.onload = function () {
+        var winH = $(window).height();
+//取到页面的高度
+        var bodyH = $(document).height();
+        if (bodyH > winH) {
+            window.parent.document.getElementById("mapPage").height = bodyH-50;
+        } else {
+            window.parent.document.getElementById("mapPage").height = winH-50;
+        }
+    }
 
 </script>
 </html>
